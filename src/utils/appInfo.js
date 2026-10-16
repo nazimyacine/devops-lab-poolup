@@ -16,6 +16,10 @@ export function getPackageInfo () {
   return { name: pkg.name, version: pkg.version }
 }
 
+/**
+ * uptime est arrondi à la seconde : une durée comme 2.058303308
+ * n'apporte rien au client et rend la réponse moins lisible.
+ */
 export function getRuntimeInfo () {
-  return { node: process.version, uptime: process.uptime() }
+  return { node: process.version, uptime: Math.round(process.uptime()) }
 }

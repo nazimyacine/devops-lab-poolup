@@ -26,4 +26,10 @@ describe('getRuntimeInfo', () => {
     expect(spy).toHaveBeenCalled()
     spy.mockRestore()
   })
+
+  it('rounds uptime to whole seconds', () => {
+    const spy = vi.spyOn(process, 'uptime').mockReturnValue(12.7)
+    expect(getRuntimeInfo().uptime).toBe(13)
+    spy.mockRestore()
+  })
 })
