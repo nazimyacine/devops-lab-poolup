@@ -10,15 +10,22 @@ describe('GET /info', () => {
   it('returns app info', async () => {
     const res = await request(app).get('/info')
     expect(res.status).toBe(200)
+    expect(res.headers['content-type']).toMatch(/application\/json/)
     expect(typeof res.body.name).toBe('string')
     expect(typeof res.body.version).toBe('string')
     expect(typeof res.body.node).toBe('string')
     expect(typeof res.body.uptime).toBe('number')
   })
 
-  it('has plausible node version & non-negative uptime', async () => {
+  it('has plausible node version & non-negative whole-second uptime', async () => {
     const res = await request(app).get('/info')
     expect(res.body.node).toMatch(/^v\d+\.\d+\.\d+/)
     expect(res.body.uptime).toBeGreaterThanOrEqual(0)
+    expect(Number.isInteger(res.body.uptime)).toBe(true)
+  })
+
+  it('returns exactly the four documented fields', async () => {
+    const res = await request(app).get('/info')
+    expect(Object.keys(res.body).sort()).toEqual(['name', 'node', 'uptime', 'version'])
   })
 })
