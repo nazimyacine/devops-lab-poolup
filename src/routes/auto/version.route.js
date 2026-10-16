@@ -1,22 +1,16 @@
 /**
  * GET /version → { version: "<package.json version>" }
- * Reads version from package.json to keep it source-of-truth.
+ * La version est lue via getPackageInfo() : package.json n'est lu qu'à
+ * un seul endroit dans le projet, /version et /info ne peuvent pas diverger.
  */
 import { Router } from 'express'
-import fs from 'node:fs'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import { getPackageInfo } from '../../utils/appInfo.js'
 
 const router = Router()
 
 router.get('/version', (_req, res) => {
-  const pkg = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')
-  )
-  res.status(200).json({ version: pkg.version })
+  const { version } = getPackageInfo()
+  res.status(200).json({ version })
 })
 
 export default router
