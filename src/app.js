@@ -1,6 +1,7 @@
 /**
  * Express app configuration.
  * Responsibilities:
+ *  - JSON body parsing for POST requests
  *  - Base routes (/, /health)
  *  - Auto-mount all routers in src/routes/auto/*.route.js
  *  - Global error handler (consistent JSON for errors)
@@ -15,6 +16,9 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
+
+// Parse JSON request bodies (needed by every POST route) before routing
+app.use(express.json())
 
 // Simple root + health endpoints
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
